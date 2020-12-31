@@ -1,0 +1,9 @@
+{
+	"Name": "NotFab",
+	"Authors": ["Fabricio20"],
+	"Description": "NotFab modifications",
+	"URL": "",
+	"Version": "0",
+	"HasWebUI": false,
+	"HasVeniceEXT": true
+}
