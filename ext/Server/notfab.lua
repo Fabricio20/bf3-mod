@@ -5,8 +5,14 @@ Events:Subscribe('Player:Reload', function(player)
 
     local projectile = '168F529C-17F6-11E0-8CD8-85483A75A7C5';
 
-    local firingFunctionData_1 = getFiringFunctionData('13D445F7-EBE3-11DF-91EC-895E59A6915B', '4506ABFE-4F34-48BE-A724-C97DA9BA46B4')
-    local firingFunctionData_2 = getFiringFunctionData('13D445F7-EBE3-11DF-91EC-895E59A6915B', 'F25DA02A-4197-4FAF-8503-9E05C705E653')
+    local firingFunctionData_1 = WeaponsAPI:getFiringFunctionData('13D445F7-EBE3-11DF-91EC-895E59A6915B', '4506ABFE-4F34-48BE-A724-C97DA9BA46B4')
+    local firingFunctionData_2 = WeaponsAPI:getFiringFunctionData('13D445F7-EBE3-11DF-91EC-895E59A6915B', 'F25DA02A-4197-4FAF-8503-9E05C705E653')
+
+    WeaponsAPI:ChangeProjectile(firingFunctionData_1, projectile)
+    WeaponsAPI:ChangeProjectile(firingFunctionData_2, projectile)
+
+    firingFunctionData_1.usePrimaryAmmo = true
+    firingFunctionData_2.usePrimaryAmmo = true
 
     local fireLogic_1 = firingFunctionData_1.fireLogic
     --fireLogic_1.rateOfFire:MakeWritable()
@@ -46,15 +52,3 @@ Events:Subscribe('Player:ReviveRefused', function(player)
         end
     end
 end)
-
-function getFiringFunctionData(weaponId, dataId)
-    local fireData = FiringFunctionData(ResourceManager:FindInstanceByGuid(Guid(weaponId), Guid(dataId)))
-    fireData:MakeWritable()
-    return fireData
-end
-
-function ChangeWeaponProjectile(fireData, newProjectilePartition)
-	fireData.shot.projectileData:MakeWritable()
-	local newProjectileData = ResourceManager:SearchForInstanceByGuid(Guid(newProjectilePartition))
-	fireData.shot.projectileData = ProjectileEntityData(newProjectileData)
-end
