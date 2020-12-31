@@ -1,2 +1,1 @@
 require('notfab')
-require('WeaponsAPI')

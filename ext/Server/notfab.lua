@@ -1,3 +1,13 @@
+require('WeaponsAPI')
+
+Events:Subscribe('Level:Loaded', function()
+    print('Detected level load.')
+end)
+
+Events:Subscribe('Extension:Loaded', function()
+    print('Extension has loaded.')
+end)
+
 Events:Subscribe('Player:Reload', function(player)
     ChatManager:Yell(player.name .. ' Reloaded', 5.0)
     --print('Weapon: ' .. player.soldier.weaponsComponent.currentWeapon.name)
