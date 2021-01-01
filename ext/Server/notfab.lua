@@ -2,45 +2,46 @@ require('WeaponsAPI')
 
 Events:Subscribe('Level:Loaded', function()
     print('Detected level load.')
+
+    -- Firing functions for Glock-18
+    local firingsGlock18 = WeaponsAPI_findAllFiringFunctionData('3B3F9879-EB4B-11DF-8AA6-AE0344995412')
+    if #firingsGlock18 ~= 0 then
+        for i = 1, #firingsGlock18 do
+            local data = firingsGlock18[i]
+            data:MakeWritable()
+            WeaponsAPI_ChangeProjectile(data, 'CEC6D381-72DE-B7D4-E998-0D566E0575C6')
+        end
+    end
+    print('Modified Glock-18 successfully.')
+
+    -- Firing functions for UMP-45
+    local firingFunctions = WeaponsAPI_findAllFiringFunctionData('13D445F7-EBE3-11DF-91EC-895E59A6915B')
+    if #firingFunctions ~= 0 then
+        for i = 1, #firingFunctions do
+            local data = firingFunctions[i]
+            data:MakeWritable()
+            WeaponsAPI_ChangeProjectile(data, '168F529C-17F6-11E0-8CD8-85483A75A7C5')
+            data.ammo.magazineCapacity = 100
+        end
+    end
+    print('Modified UMP-45 successfully.')
 end)
 
 Events:Subscribe('Extension:Loaded', function()
     print('Extension has loaded.')
 end)
 
+Hooks:Install('Soldier:Damage', 1, function(hook, soldier, info, giverInfo)
+    if soldier.health < 100 then
+        info.damage = (100 - soldier.health) * -1
+        hook:Pass(soldier, info, giverInfo)
+    end
+end)
+
 Events:Subscribe('Player:Reload', function(player)
-    ChatManager:Yell(player.name .. ' Reloaded', 5.0)
+    ChatManager:Yell(player.name .. ' Reloaded', 1.0, player)
     --print('Weapon: ' .. player.soldier.weaponsComponent.currentWeapon.name)
     --player.soldier.weaponsComponent.currentWeapon.primaryAmmo = 666
-
-    -- Firing functions for UMP-45
-    local firingFunctions = WeaponsAPI_getAllInstances('13D445F7-EBE3-11DF-91EC-895E59A6915B', 'FiringFunctionData')
-    if #firingFunctions ~= 0 then
-        for i = 1, #firingFunctions do
-            local data = firingFunctions[i]
-            data:MakeWritable()
-            print('Found instance of a weapon ' .. data.instanceGuid:ToString('D'))
-            WeaponsAPI_ChangeProjectile(data, '168F529C-17F6-11E0-8CD8-85483A75A7C5')
-            print('Changed Projectile')
-            data.ammo.magazineCapacity = 4000
-            -- Slower RoF
-            local fireLogic = data.fireLogic
-            fireLogic.rateOfFire = 600
-            print(fireLogic.rateOfFire)
-        end
-    end
-
-    local firingsGlock18 = WeaponsAPI_getAllInstances('3B3F9879-EB4B-11DF-8AA6-AE0344995412', 'FiringFunctionData')
-    if #firingsGlock18 ~= 0 then
-        for i = 1, #firingsGlock18 do
-            local data = firingsGlock18[i]
-            data:MakeWritable()
-            print('Found instance of a weapon ' .. data.instanceGuid:ToString('D'))
-            WeaponsAPI_ChangeProjectile(data, 'CEC6D381-72DE-B7D4-E998-0D566E0575C6')
-            print('Changed Projectile')
-            data.ammo.magazineCapacity = 21
-        end
-    end
 end)
 
 Events:Subscribe('Player:Killed', function(player)
