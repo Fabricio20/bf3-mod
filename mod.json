@@ -4,6 +4,6 @@
 	"Description": "NotFab modifications",
 	"URL": "",
 	"Version": "0",
-	"HasWebUI": false,
+	"HasWebUI": true,
 	"HasVeniceEXT": true
 }
