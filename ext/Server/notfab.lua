@@ -32,9 +32,24 @@ Events:Subscribe('Extension:Loaded', function()
 end)
 
 Hooks:Install('Soldier:Damage', 1, function(hook, soldier, info, giverInfo)
-    if soldier.health < 100 then
-        info.damage = (100 - soldier.health) * -1
-        hook:Pass(soldier, info, giverInfo)
+    -- If normal damage (not suicide, vehicle, etc..)
+    if (giverInfo.giver ~= nil) and (giverInfo.damageType == 0) then
+        local giver = giverInfo.giver;
+        -- If not by himself, and a shot by his team
+        if (giver.guid ~= soldier.player.guid) and (giver.teamId == soldier.player.teamId) then
+            -- Shots should heal!
+            if soldier.health < 100 then
+                if soldier.health + (info.damage * -1) > 100 then
+                    info.damage = 0
+                    soldier.health = 100
+                else
+                    info.damage = info.damage * -1
+                end
+            else
+                info.damage = 0
+            end
+            hook:Pass(soldier, info, giverInfo)
+        end
     end
 end)
 
