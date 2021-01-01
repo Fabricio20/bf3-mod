@@ -1,7 +1,9 @@
 require('WeaponsAPI')
+require('levolution')
 
 Events:Subscribe('Level:Loaded', function()
     print('Detected level load.')
+    Levolution_Clear()
 
     -- Firing functions for Glock-18
     local firingsGlock18 = WeaponsAPI_findAllFiringFunctionData('3B3F9879-EB4B-11DF-8AA6-AE0344995412')
@@ -25,6 +27,20 @@ Events:Subscribe('Level:Loaded', function()
         end
     end
     print('Modified UMP-45 successfully.')
+end)
+
+Hooks:Install('BulletEntity:Collision', 1, function(hook, entity, hit, giverInfo)
+    Levolution_Trigger(entity, hit, giverInfo)
+    -- Debugging data for finding what an object is in the map
+    if false then
+        print('----------------------------------------------')
+        print('Instance: ' .. hit.rigidBody.instanceId)
+        print('Map: ' .. hit.material.partition.guid:ToString('D'))
+        print('Material: ' .. hit.material.instanceGuid:ToString('D'))
+        print('RigidBody UID: ' .. tostring(hit.rigidBody.uniqueId))
+        print('RigidBody IID: ' .. tostring(hit.rigidBody.instanceId))
+        print('RigidBody DATA: ' .. tostring(hit.rigidBody.data ~= nil))
+    end
 end)
 
 Events:Subscribe('Extension:Loaded', function()
